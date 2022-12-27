@@ -6,6 +6,10 @@ export default function connectToDatabase() {
 		dbName: process.env.MONGODB_DB,	
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
-	} ).then( console.log( `Database connection established.` ) );
+	} )
+	.then( console.log( `Database connection established.` ) )
+	.catch( ( error ) => {
+		return Promise.reject(error);
+	} );
 
 }
