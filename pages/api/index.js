@@ -1,5 +1,10 @@
 import connectToDatabase from "../../database/connection";
-import { getTestEntries, postTestEntry, putTestEntry, deleteTestEntry } from "../../database/controllers";
+import {
+	getTestEntries,
+	postTestEntry,
+	putTestEntry,
+	deleteTestEntry,
+} from "../../database/controllers";
 
 export default function handler(req, res) {
 	connectToDatabase().catch((error) => {
