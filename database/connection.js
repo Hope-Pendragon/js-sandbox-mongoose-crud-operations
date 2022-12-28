@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-
+mongoose.set("strictQuery", false);
 export default async function connectToDatabase() {
 	mongoose
 		.connect(process.env.MONGODB_URI, {
