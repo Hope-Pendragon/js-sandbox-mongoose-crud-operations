@@ -1,41 +1,41 @@
 import { ObjectId } from "mongodb";
-import TestEntry from "./models";
+import User from "./models";
 
-export async function getTestEntries(_req, res) {
+export async function readUsers(_req, res) {
 	try {
-		const testEntries = await TestEntry.find();
+		const users = await User.find();
 
-		res.status(200).json(testEntries);
+		res.status(200).json(users);
 	} catch (error) {
 		res.status(404).send({ error: error });
 	}
 }
 
-export async function getTestEntry(req, res) {
+export async function readUser(req, res) {
 	try {
 		const _id = req.query;
 
-		const testEntry = await TestEntry.findByID(_id);
+		const user = await User.findByID(_id);
 
-		if (!testEntry) {
+		if (!user) {
 			res.status(404).send({ error: "No data received." });
 		}
 
-		res.status(200).json(testEntry);
+		res.status(200).json(user);
 	} catch (error) {
 		res.status(404).send({ error: error });
 	}
 }
 
-export async function postTestEntry(req, res) {
+export async function postUser(req, res) {
 	try {
-		const testEntry = JSON.parse(req.body);
+		const user = JSON.parse(req.body);
 
-		if (!testEntry) {
+		if (!user) {
 			res.status(404).send({ error: "Unable to create entry..." });
 		}
 
-		TestEntry.create(testEntry, (error, data) => {
+		User.create(user, (error, data) => {
 			if (error) {
 				res.status(404).send({ error: error });
 			}
@@ -47,54 +47,40 @@ export async function postTestEntry(req, res) {
 	}
 }
 
-export async function putTestEntry(req, res) {
+export async function updateUser(req, res) {
 	try {
-		// The following code needs to be executed EXACTLY as is
-		// - Changing any one part will likely require almost everything else to change as well
-
-		// - _id MUST come from the query and both the property or value should be unquoted string values
 		const { _id } = req.query;
 		if (!_id) {
 			res.status(404).send({ error: "No entry selected to update..." });
 		}
 
-		// - updates MUST be set directly equal to req.body
-		// - the contents of the body MUST be sent as JSON
-		//   - and due to that property names MUST be DOUBLE quoted
-		// - neither updates nor req.body should be modified in any way
 		const updates = req.body;
 		if (!updates) {
 			res.status(404).send({ error: "No updates provided..." });
 		}
 
-		// - testEntry needs to be defined and be const
-		// - await MUST be used
-		// - the query function MUST be assigned directly to testEntry
-		// - neither the _id nor updates should be passed in any way other than as is
-		// - the properties being passed must already exist within the database to be updated
-		//   - { strict: false } MUST be specified in the options if you wish to bypass this
-		const testEntry = await TestEntry.findByIdAndUpdate(_id, updates, {
+		const user = await User.findByIdAndUpdate(_id, updates, {
 			strict: false,
 			strictQuery: false,
 			new: true,
 		});
 
-		res.status(200).json(testEntry);
+		res.status(200).json(user);
 	} catch (error) {
 		res.status(404).send({ error: error });
 	}
 }
 
-export async function deleteTestEntry(req, res) {
+export async function deleteUser(req, res) {
 	try {
 		const { _id } = req.query;
-		const testEntry = await TestEntry.findByIdAndDelete(_id);
+		const user = await User.findByIdAndDelete(_id);
 
 		if (!_id) {
 			res.status(404).send({ error: "No entry specified to delete..." });
 		}
 
-		res.status(200).json({ deleted: testEntry });
+		res.status(200).json({ deleted: user });
 	} catch (error) {
 		res.status(404).send({ error: error });
 	}
