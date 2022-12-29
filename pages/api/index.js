@@ -1,35 +1,38 @@
 import connectToDatabase from "../../database/connection";
 import {
-	getTestEntries,
-	postTestEntry,
-	putTestEntry,
-	deleteTestEntry,
-} from "../../database/controllers";
+	getUsers,
+	postUser,
+	putUser,
+	deleteUser,
+} from "../../utils/usersController";
+export default async function usersEndpoint(req, res) {
+	try {
+		connectToDatabase();
 
-export default function handler(req, res) {
-	connectToDatabase().catch((error) => {
-		res.status(405).json({
-			error: `Failed to connect to database. \n${error}`,
-		});
-	});
+		const { method } = req;
 
-	const { method } = req;
-
-	switch (method) {
-		case "GET":
-			getTestEntries(req, res);
-			break;
-		case "POST":
-			postTestEntry(req, res);
-			break;
-		case "PUT":
-			putTestEntry(req, res);
-			break;
-		case "DELETE":
-			deleteTestEntry(req, res);
-			break;
-		default:
-			res.status(405).end(`${method} method is not allowed.`);
-			break;
+		try {
+			switch (method) {
+				case "POST":
+					await postUser(req, res);
+					break;
+				case "GET":
+					await getUsers(res);
+					break;
+				case "PUT":
+					await putUser(req, res);
+					break;
+				case "DELETE":
+					await deleteUser(req, res);
+					break;
+				default:
+					throw new Error(`${method} method is not allowed.`);
+			}
+		} catch (error) {
+			console.log("index.js error");
+			res.status(404).end({ error: error });
+		}
+	} catch {
+		res.status(404).end("Unable to connect to database...");
 	}
 }
